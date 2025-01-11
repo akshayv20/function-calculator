@@ -21,40 +21,52 @@ const App = () => {
 
   const calculateOutput = (equation, input) => {
     try {
-      const replaced = equation.replaceAll("x", `(${input})`);
-      const result = Function(`return ${replaced}`)();
+      // Handle `2x` as `2*x`
+      let modifiedEquation = equation.replace(/(\d)(x)/g, "$1*$2");
+
+      // Handle exponentiation: `x^2` to `x**2`
+      modifiedEquation = modifiedEquation.replace(/(\^)/g, "**");
+
+      // Replace `x` with the actual input value
+      modifiedEquation = modifiedEquation.replaceAll("x", `(${input})`);
+
+      // Use the Function constructor to evaluate the expression
+      const result = Function(`return ${modifiedEquation}`)();
       return result;
     } catch (error) {
       return "Error";
     }
   };
-
   useEffect(() => {
     const calculateChainedFunctions = () => {
       const visited = new Set();
       let currentValue = initialValue;
-      let index = 0;
+
+      // Define the fixed order of function execution
+      const order = [0, 1, 3, 4, 2]; // Corresponding to functions 1 -> 2 -> 4 -> 5 -> 3 (0-indexed)
 
       const updatedFunctions = functions.map((func) => ({
         ...func,
         output: 0
       }));
 
-      while (index !== -1 && !visited.has(index)) {
+      // Iterate through the functions based on the fixed order
+      order.forEach((index) => {
+        if (visited.has(index)) return;
+
         visited.add(index);
         const func = updatedFunctions[index];
         const output = calculateOutput(func.equation, currentValue);
         func.output = output;
         currentValue = output;
-        index = func.next !== -1 ? func.next - 1 : -1;
-      }
+      });
 
       setFunctions(updatedFunctions);
       setFinalOutput(currentValue);
     };
 
     calculateChainedFunctions();
-  }, []);
+  }, [initialValue, JSON.stringify(functions)]);
 
   const handleEquationChange = (index, newEquation) => {
     if (validateEquation(newEquation)) {
@@ -100,8 +112,8 @@ const App = () => {
     // Create a new path element
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.setAttribute("d", pathData);
-    path.setAttribute("stroke", "#007bff");
-    path.setAttribute("stroke-width", "2");
+    path.setAttribute("stroke", "#0066FF4F");
+    path.setAttribute("stroke-width", "7");
     path.setAttribute("fill", "none");
     path.setAttribute("data-from", from.id);
     path.setAttribute("data-to", to.id);
@@ -134,68 +146,90 @@ const App = () => {
         connectElements(fromElement, toElement);
       }
     });
-  }, [functions]); // Redraw lines whenever `functions` changes
-  // Redraw lines whenever `functions` changes
+  }, []);
 
   return (
     <div className='p-10 flex align-center justify-center m-10 gap-8'>
-      <div className='flex flex-col items-center gap-2'>
-        <label className='text-sm font-semibold text-white bg-orange-400 py-1 px-2 rounded-xl'>
+      <div className='flex flex-col items-center justify-center gap-2 '>
+        <label className='text-xs font-bold tracking-tighter text-white bg-orange-400 py-1 px-3 rounded-xl'>
           Initial value of x
         </label>
-        <div className='flex items-center w-36 h-12 border-2 border-orange-400 rounded-xl overflow-hidden'>
+        <div className='w-[111px] h-[50px] rounded-[15px] border-2 border-[#FFC267] flex items-center justify-center overflow-hidden'>
           <input
             type='number'
             value={initialValue}
             onChange={(e) => setInitialValue(Number(e.target.value))}
-            className='w-1/2 h-full border-none outline-none text-center text-lg font-bold text-black bg-transparent'
+            className='w-2/3 h-full border-none outline-none text-center text-lg font-bold text-black bg-transparent'
           />
-          <div className='w-1/2 h-full border-l border-gray-300 flex items-center justify-center bg-gray-100'>
+          <div className='w-1/3 h-full border-l border-1 border-[#FFEED5] flex items-center justify-center '>
             <div
               className='flex items-center text-xs font-bold text-gray-600 gap-1.5 connector-label-input'
               id='connector-label-input'
             >
-              <span
-                className='w-2 h-2 bg-blue-600 rounded-full'
-                id='connector-input'
-              ></span>
+              <div className='w-[15px] h-[15px] border-2 border-[#DBDBDB] rounded-full flex items-center justify-center'>
+                <span
+                  className='w-[7px] h-[7px] bg-blue-600 rounded-full'
+                  id='connector-input'
+                ></span>
+              </div>
             </div>
           </div>
         </div>
       </div>
+      <div className='flex flex-col gap-16'>
+        <div className='flex flex-wrap justify-between gap-16 relative'>
+          {functions.slice(0, 3).map((func, index) => (
+            <FunctionCard
+              key={index}
+              ref={(el) => (functionRefs.current[index] = el)}
+              title={`Function ${index + 1}`}
+              equation={func.equation}
+              onChange={(e) => handleEquationChange(index, e.target.value)}
+              output={func.output}
+              nextFunction={func.next}
+              onNextChange={(e) =>
+                handleNextChange(index, parseInt(e.target.value))
+              }
+              index={index}
+            />
+          ))}
+        </div>
 
-      <div className='grid grid-cols-3 gap-8 relative'>
-        {functions.map((func, index) => (
-          <FunctionCard
-            key={index}
-            ref={(el) => (functionRefs.current[index] = el)}
-            title={`Function ${index + 1}`}
-            equation={func.equation}
-            onChange={(e) => handleEquationChange(index, e.target.value)}
-            output={func.output}
-            nextFunction={func.next}
-            onNextChange={(e) =>
-              handleNextChange(index, parseInt(e.target.value))
-            }
-            index={index}
-          />
-        ))}
+        <div className='flex justify-center gap-16'>
+          {functions.slice(3, 5).map((func, index) => (
+            <FunctionCard
+              key={index + 3}
+              ref={(el) => (functionRefs.current[index + 3] = el)}
+              title={`Function ${index + 4}`}
+              equation={func.equation}
+              onChange={(e) => handleEquationChange(index + 3, e.target.value)}
+              output={func.output}
+              nextFunction={func.next}
+              onNextChange={(e) =>
+                handleNextChange(index + 3, parseInt(e.target.value))
+              }
+              index={index + 3}
+            />
+          ))}
+        </div>
       </div>
 
-      <div className='flex flex-col items-center gap-2'>
-        <label className='text-sm font-semibold text-white bg-green-500 py-1 px-2 rounded-xl'>
+      <div className='flex flex-col items-center justify-center gap-2'>
+        <label className='text-xs font-bold tracking-tighter text-white bg-green-500 py-1 px-3 rounded-xl'>
           Final Output (y)
         </label>
-        <div className='flex items-center w-36 h-12 border-2 border-green-500 rounded-xl overflow-hidden'>
-          <div className='w-1/2 h-full border-l border-gray-300 bg-gray-100 flex items-center justify-center'>
+        <div className='w-[108px] h-[50px] rounded-[15px] border-2 border-[#2DD179] flex items-center justify-center overflow-hidden'>
+          <div className='w-1/3 h-full border-r border-1 border-[#C5F2DA]  flex items-center justify-center'>
             <div className='flex items-center text-xs font-bold text-gray-600 gap-1.5'>
-              <span
-                className='w-2 h-2 bg-blue-600 rounded-full'
-                id='connector-output'
-              ></span>
+              <div className='w-[15px] h-[15px] border-2 border-[#DBDBDB] rounded-full flex items-center justify-center'>
+                <span
+                  className='w-[7px] h-[7px] bg-blue-600 rounded-full'
+                  id='connector-output'
+                ></span>
+              </div>
             </div>
           </div>
-          <p className='w-1/2 h-full text-center text-lg font-bold text-black bg-transparent flex items-center justify-center m-0'>
+          <p className='w-2/3 h-full text-center text-lg font-bold text-black bg-transparent flex items-center justify-center m-0'>
             {finalOutput}
           </p>
         </div>

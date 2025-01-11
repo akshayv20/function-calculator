@@ -4,7 +4,14 @@ module.exports = {
     "./src/**/*.{html,js,jsx,ts,tsx}" // Update with your file paths
   ],
   theme: {
-    extend: {}
+    extend: {
+      width: {
+        235: "228px"
+      },
+      height: {
+        251: "244px"
+      }
+    }
   },
   plugins: []
 };
