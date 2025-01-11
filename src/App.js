@@ -149,7 +149,7 @@ const App = () => {
   }, []);
 
   return (
-    <div className='p-10 flex align-center justify-center m-10 gap-8'>
+    <div className='p-10 flex align-center justify-center m-10 gap-4'>
       <div className='flex flex-col items-center justify-center gap-2 '>
         <label className='text-xs font-bold tracking-tighter text-white bg-orange-400 py-1 px-3 rounded-xl'>
           Initial value of x
@@ -176,8 +176,8 @@ const App = () => {
           </div>
         </div>
       </div>
-      <div className='flex flex-col gap-16'>
-        <div className='flex flex-wrap justify-between gap-16 relative'>
+      <div className='flex flex-col gap-24'>
+        <div className='flex flex-wrap justify-between gap-32 relative'>
           {functions.slice(0, 3).map((func, index) => (
             <FunctionCard
               key={index}
@@ -195,7 +195,7 @@ const App = () => {
           ))}
         </div>
 
-        <div className='flex justify-center gap-16'>
+        <div className='flex justify-center gap-32 mt-2 ml-2'>
           {functions.slice(3, 5).map((func, index) => (
             <FunctionCard
               key={index + 3}

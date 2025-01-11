@@ -12,9 +12,9 @@ const FunctionCard = ({
   console.log("index", index);
   return (
     <div className='w-235 h-251 bg-white shadow-md rounded-xl flex flex-col gap-4 p-4 relative border border-[#DBDBDB]'>
-      <h3 className='text-[#A5A5A5] font-inter  tracking-tighter text-[14px] font-semibold leading-[16.94px] text-left decoration-transparent'>
-        {title}
-      </h3>
+      <div className=' text-[#A5A5A5] font-inter  tracking-tighter text-[14px] font-semibold  text-left decoration-transparent'>
+        :::&nbsp; {title}
+      </div>
       <div className=''>
         <div className='flex flex-col gap-2.5'>
           <div className='mb-1'>
@@ -48,7 +48,7 @@ const FunctionCard = ({
             </select>
           </div>
         </div>
-        <div className='flex justify-between items-center mt-2 pt-4'>
+        <div className='flex justify-between items-center  pt-4'>
           <div className='flex items-center ml-1 mt-1 text-xs tracking-tighter font-bold text-gray-600 gap-1'>
             <div className='w-[15px] h-[15px] border-2 border-[#DBDBDB] rounded-full flex items-center justify-center'>
               <span
