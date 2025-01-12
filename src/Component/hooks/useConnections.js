@@ -9,12 +9,10 @@ const useConnections = (connections) => {
       const svg = svgRef.current;
       if (!svg) return;
 
-      // Clear existing paths in the SVG
       while (svg.firstChild) {
         svg.removeChild(svg.firstChild);
       }
 
-      // Draw all connections
       connections.forEach(({ from, to }) => {
         const fromElement = document.getElementById(from);
         const toElement = document.getElementById(to);
@@ -24,14 +22,11 @@ const useConnections = (connections) => {
       });
     };
 
-    // Initial draw
     redrawConnections();
 
-    // Add event listeners for resize and scroll
     window.addEventListener("resize", redrawConnections);
     window.addEventListener("scroll", redrawConnections);
 
-    // Cleanup event listeners
     return () => {
       window.removeEventListener("resize", redrawConnections);
       window.removeEventListener("scroll", redrawConnections);

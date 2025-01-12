@@ -15,7 +15,6 @@ const useCalculateChainedFunctions = (initialValue, functions, order) => {
         output: 0
       }));
 
-      // Iterate through the functions based on the fixed order
       order.forEach((index) => {
         if (visited.has(index)) return;
 
