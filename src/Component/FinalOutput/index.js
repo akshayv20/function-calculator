@@ -16,7 +16,7 @@ const FinalOutput = ({ value }) => (
           </div>
         </div>
       </div>
-      <p className='w-2/3 h-full text-center text-lg font-bold text-black bg-transparent flex items-center justify-center  m-0'>
+      <p className='w-2/3 h-full text-center text-lg font-bold text-black bg-transparent flex items-center justify-center overflow-y-auto overflow-x-hidden m-0'>
         {value || ""}
       </p>
     </div>

@@ -9,7 +9,7 @@ const InitialInput = ({ value, onChange }) => (
       <input
         type='number'
         value={value || ""}
-        placeholder='Enter value for x'
+        placeholder='Enter x'
         onChange={(e) => onChange(Number(e.target.value))}
         className='w-2/3 h-full border-none outline-none text-center text-lg font-bold text-black bg-transparent input-no-spin'
       />
