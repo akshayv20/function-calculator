@@ -123,29 +123,47 @@ const App = () => {
   };
 
   useEffect(() => {
-    // Clear existing paths in the SVG
-    const svg = svgRef.current;
-    while (svg.firstChild) {
-      svg.removeChild(svg.firstChild);
-    }
+    const redrawConnections = () => {
+      const svg = svgRef.current;
+      if (!svg) return;
 
-    // Redraw connections
-    const connections = [
-      { from: "connector-input", to: "input-1" },
-      { from: "output-1", to: "input-2" },
-      { from: "output-2", to: "input-4" },
-      { from: "output-4", to: "input-5" },
-      { from: "output-5", to: "input-3" },
-      { from: "output-3", to: "connector-output" }
-    ];
-
-    connections.forEach(({ from, to }) => {
-      const fromElement = document.getElementById(from);
-      const toElement = document.getElementById(to);
-      if (fromElement && toElement) {
-        connectElements(fromElement, toElement);
+      // Clear existing paths in the SVG
+      while (svg.firstChild) {
+        svg.removeChild(svg.firstChild);
       }
-    });
+
+      // Define the connections
+      const connections = [
+        { from: "connector-input", to: "input-1" },
+        { from: "output-1", to: "input-2" },
+        { from: "output-2", to: "input-4" },
+        { from: "output-4", to: "input-5" },
+        { from: "output-5", to: "input-3" },
+        { from: "output-3", to: "connector-output" }
+      ];
+
+      // Redraw all connections
+      connections.forEach(({ from, to }) => {
+        const fromElement = document.getElementById(from);
+        const toElement = document.getElementById(to);
+        if (fromElement && toElement) {
+          connectElements(fromElement, toElement);
+        }
+      });
+    };
+
+    // Initial draw
+    redrawConnections();
+
+    // Add event listeners for resize and scroll
+    window.addEventListener("resize", redrawConnections);
+    window.addEventListener("scroll", redrawConnections);
+
+    // Cleanup event listeners
+    return () => {
+      window.removeEventListener("resize", redrawConnections);
+      window.removeEventListener("scroll", redrawConnections);
+    };
   }, []);
 
   return (
@@ -176,7 +194,7 @@ const App = () => {
           </div>
         </div>
       </div>
-      <div className='flex flex-col gap-24'>
+      <div className='flex flex-col gap-24 '>
         <div className='flex flex-wrap justify-between gap-32 relative'>
           {functions.slice(0, 3).map((func, index) => (
             <FunctionCard
