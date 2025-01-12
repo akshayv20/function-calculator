@@ -1,13 +1,10 @@
-// constants.js
-
-// Local storage keys
 export const LOCAL_STORAGE_KEYS = {
   INITIAL_VALUE: "initialValue",
   FUNCTIONS: "functions",
   FINAL_OUTPUT: "finalOutput"
 };
 
-// Default functions for initialization
+
 export const defaultFunctions = [
   { id: 1, equation: "x^2", output: 0, next: 2 },
   { id: 2, equation: "2*x+4", output: 0, next: 4 },
@@ -16,7 +13,7 @@ export const defaultFunctions = [
   { id: 5, equation: "x/2", output: 0, next: 3 }
 ];
 
-// Connections for the diagram
+
 export const connections = [
   { from: "connector-input", to: "input-1" },
   { from: "output-1", to: "input-2" },

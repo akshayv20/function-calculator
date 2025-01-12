@@ -10,6 +10,7 @@ import {
   defaultFunctions
 } from "./Component/utils/constant";
 import "./App.css";
+import { debounce } from "./Component/utils/debounce";
 
 const App = () => {
   // Load initial value from localStorage or default to 2
@@ -90,8 +91,9 @@ const App = () => {
             key={index}
             title={`Function: ${index + 1}`}
             equation={func.equation}
-            onChange={(e) => handleEquationChange(index, e.target.value)}
-            output={func.output}
+            onChange={(e) =>
+              debounce(handleEquationChange(index, e.target.value), 1000)
+            }
             nextFunction={func.next}
             index={index}
           />

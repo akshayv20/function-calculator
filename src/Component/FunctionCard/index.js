@@ -1,13 +1,6 @@
 import React from "react";
 
-const FunctionCard = ({
-  title,
-  equation,
-  onChange,
-  nextFunction,
-  onNextChange,
-  index
-}) => {
+const FunctionCard = ({ title, equation, onChange, nextFunction, index }) => {
   return (
     <div className='w-235 h-251 bg-white shadow-md rounded-xl flex flex-col gap-4 px-4 py-2  relative border border-[#DBDBDB]'>
       <div className=' flex  text-[#A5A5A5] font-inter   text-[14px] font-semibold  text-left decoration-transparent'>
@@ -37,7 +30,6 @@ const FunctionCard = ({
             <select
               value={nextFunction}
               disabled
-              onChange={onNextChange}
               className='border h-8 border-gray-300 rounded-md p-2 text-xs bg-gray-100 w-full'
             >
               <option key={nextFunction} value={nextFunction}>
